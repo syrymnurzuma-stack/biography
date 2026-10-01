@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Моя биография</title>
+  <style>
+    :root {
+      --bg: #05030a;
+      --text: #f2f0f7;
+      --muted: #9a94ad;
+      --accent: #a678ff;
+      --accent-deep: #6d28d9;
+      --card: rgba(18, 12, 32, 0.72);
+      --line: rgba(166, 120, 255, 0.35);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 20px; }
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background:
+        radial-gradient(ellipse 80% 50% at 15% 0%, rgba(109, 40, 217, 0.40), transparent 70%),
+        radial-gradient(ellipse 60% 40% at 90% 35%, rgba(166, 120, 255, 0.16), transparent 70%),
+        var(--bg);
+      background-attachment: fixed;
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    /* Космос: два слоя звёзд, второй мерцает */
+    body::before, body::after {
+      content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    }
+    body::before {
+      background-image:
+        radial-gradient(1px 1px at 20px 30px, #fff, transparent),
+        radial-gradient(1px 1px at 90px 120px, #fff, transparent),
+        radial-gradient(1.5px 1.5px at 160px 60px, #c9b0ff, transparent),
+        radial-gradient(1px 1px at 230px 190px, #fff, transparent),
+        radial-gradient(1.5px 1.5px at 310px 90px, #fff, transparent),
+        radial-gradient(1px 1px at 60px 210px, #c9b0ff, transparent);
+      background-size: 340px 240px;
+      opacity: 0.8;
+    }
+    body::after {
+      background-image:
+        radial-gradient(2px 2px at 70px 70px, #fff, transparent),
+        radial-gradient(2px 2px at 250px 150px, #d8c6ff, transparent),
+        radial-gradient(1.5px 1.5px at 400px 40px, #fff, transparent),
+        radial-gradient(2px 2px at 510px 230px, #fff, transparent);
+      background-size: 570px 320px;
+      animation: twinkle 4s ease-in-out infinite alternate;
+    }
+    @keyframes twinkle { from { opacity: 0.15; } to { opacity: 1; } }
+    @media (prefers-reduced-motion: reduce) {
+      body::after { animation: none; opacity: 0.6; }
+      .photo:hover, .edu-item:hover, .skills li:hover { transform: none; }
+    }
+
+    a { color: var(--accent); }
+    a:hover { color: #fff; }
+    a:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+    header { padding: 90px 20px 40px; text-align: center; }
+    header h1 {
+      font-size: clamp(2.4rem, 8vw, 4.6rem);
+      font-weight: 200;
+      letter-spacing: 0.18em;
+      text-shadow: 0 0 30px rgba(166, 120, 255, 0.75), 0 0 70px rgba(109, 40, 217, 0.6);
+    }
+    nav { margin-top: 30px; display: flex; flex-wrap: wrap; gap: 10px 26px; justify-content: center; }
+    nav a { color: var(--text); text-decoration: none; font-size: 0.95rem; padding-bottom: 3px; border-bottom: 1px solid transparent; }
+    nav a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+    main { max-width: 880px; margin: 0 auto; padding: 20px; }
+    section { margin: 56px 0; }
+    h2 {
+      font-size: 1.6rem; font-weight: 300; letter-spacing: 0.05em;
+      padding-bottom: 10px; margin-bottom: 22px;
+      border-bottom: 1px solid var(--line);
+    }
+    ul { padding-left: 22px; }
+    li { margin-bottom: 6px; }
+    li::marker { color: var(--accent); }
+
+    .about { display: flex; gap: 28px; align-items: flex-start; flex-wrap: wrap; }
+    .about .photo { flex: 0 0 220px; }
+    .about .text { flex: 1 1 300px; }
+    .about .text strong { color: var(--accent); font-weight: 600; }
+
+    /* Фото чёрно-белые, цвет появляется при наведении */
+    .photo {
+      aspect-ratio: 1 / 1;
+      background: var(--card);
+      border: 1px solid var(--line);
+      box-shadow: 0 0 24px rgba(109, 40, 217, 0.35);
+      overflow: hidden;
+      transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+    }
+    .photo:hover {
+      transform: translateY(-6px) scale(1.03);
+      border-color: var(--accent);
+      box-shadow: 0 0 40px rgba(166, 120, 255, 0.75);
+    }
+    .photo img {
+      width: 100%; height: 100%; object-fit: cover; object-position: center 30%; display: block;
+      filter: grayscale(1) contrast(1.05);
+      transition: filter 0.4s;
+    }
+    .photo:hover img { filter: grayscale(0); }
+
+    .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+
+    .edu-item {
+      background: var(--card); border-left: 3px solid var(--accent); padding: 14px 18px; margin-bottom: 14px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+    }
+    .edu-item:hover {
+      transform: translateX(12px);
+      background: rgba(109, 40, 217, 0.3);
+      border-left-color: #fff;
+      box-shadow: 0 0 28px rgba(166, 120, 255, 0.5);
+    }
+    .edu-item span { display: block; color: var(--muted); font-size: 0.9rem; }
+
+    .skills { display: flex; flex-wrap: wrap; gap: 10px; list-style: none; padding: 0; }
+    .skills li { background: var(--card); border: 1px solid var(--line); padding: 7px 16px; border-radius: 999px; font-size: 0.95rem; margin: 0;
+      transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease; cursor: default; }
+    .skills li:hover {
+      transform: translateY(-5px) scale(1.07);
+      background: var(--accent-deep);
+      border-color: var(--accent);
+      box-shadow: 0 0 22px rgba(166, 120, 255, 0.7);
+    }
+
+    footer { text-align: center; color: var(--muted); font-size: 0.85rem; padding: 40px 20px 50px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Моя биография</h1>
+    <nav>
+      <a href="#about">Обо мне</a>
+      <a href="#education">Образование</a>
+      <a href="#interests">Интересы</a>
+      <a href="#skills">Навыки</a>
+      <a href="#photos">Фотографии</a>
+      <a href="#links">Полезные ссылки</a>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- ОБО МНЕ -->
+    <section id="about">
+      <h2>Обо мне</h2>
+      <div class="about">
+        <div class="photo">
+          <img src="images/mainphoto.jpg" alt="Моё главное фото">
+        </div>
+        <div class="text">
+          <p><strong>Имя:</strong> Нуржума Сырым</p>
+          <p><strong>Дата рождения:</strong> 22.06.2008</p>
+          <p><strong>Город:</strong> Алматы</p>
+          <p style="margin-top:10px;">
+            Привет, я Сырым, мне 18 лет и я студент колледжа АУЭС.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ОБРАЗОВАНИЕ -->
+    <section id="education">
+      <h2>Моё образование</h2>
+      <div class="edu-item">
+        <strong>Колледж АУЭС при Университете</strong>
+        <span>2024 — 2028 · Программное обеспечение</span>
+      </div>
+      <div class="edu-item">
+        <strong>Школа №156</strong>
+        <span>2014 — 2024 · Общеобразовательная школа</span>
+      </div>
+    </section>
+
+    <!-- ИНТЕРЕСЫ -->
+    <section id="interests">
+      <h2>Мои интересы</h2>
+      <ul>
+        <li>Изучение географии</li>
+        <li>Спорт и лёгкий хайкинг</li>
+        <li>Музыка</li>
+        <li>Программирование</li>
+        <li>Видеоигры</li>
+      </ul>
+    </section>
+
+    <!-- НАВЫКИ -->
+    <section id="skills">
+      <h2>Мои навыки</h2>
+      <ul class="skills">
+        <li>HTML и CSS</li>
+        <li>Работа в команде и коммуникация с людьми</li>
+        <li>Английский язык на уровне B1</li>
+        <li>C++</li>
+        <li>Грамотная речь</li>
+        <li>Владение 3 языками</li>
+      </ul>
+    </section>
+
+    <!-- ФОТОГРАФИИ -->
+    <section id="photos">
+      <h2>Мои фотографии</h2>
+      <div class="gallery">
+        <div class="photo"><img src="images/photo1.jpg" alt="Фото 1"></div>
+        <div class="photo"><img src="images/photo2.jpg" alt="Фото 2"></div>
+        <div class="photo"><img src="images/photo3.jpg" alt="Фото 3"></div>
+        <div class="photo"><img src="images/photo4.jpg" alt="Фото 4"></div>
+      </div>
+    </section>
+
+    <!-- ПОЛЕЗНЫЕ ССЫЛКИ -->
+    <section id="links">
+      <h2>Полезные ссылки</h2>
+      <ul>
+        <li><a href="https://developer.mozilla.org/ru/" target="_blank" rel="noopener">MDN Web Docs — справочник по HTML, CSS и JavaScript</a></li>
+        <li><a href="https://www.w3schools.com/" target="_blank" rel="noopener">W3Schools — учебник по веб-разработке</a></li>
+        <li><a href="https://code.visualstudio.com/" target="_blank" rel="noopener">Visual Studio Code — редактор кода</a></li>
+        <li><a href="https://github.com/" target="_blank" rel="noopener">GitHub — мой профиль</a></li>
+      </ul>
+    </section>
+
+  </main>
+
+  <footer>© 2026 Моя биография</footer>
+
+<script>
+    // Плавная прокрутка при нажатии на пункты меню
+    document.querySelectorAll('nav a[href^="#"]').forEach(function (link) {
+      link.addEventListener('click', function (e) {
+        var target = document.querySelector(link.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
